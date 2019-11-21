@@ -13,12 +13,9 @@ import '../css/styles.less';
 
 import store from './store';
 
-import JsonExcel from 'vue-json-excel'
-
 
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios)
-Vue.component('downloadExcel', JsonExcel)
 
 
 
