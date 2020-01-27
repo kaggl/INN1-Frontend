@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
 	entry: './src/js/main.js',
@@ -11,6 +12,30 @@ module.exports = {
 	},*/
 	module: {
 		rules: [
+			{
+	      test: /\.s(c|a)ss$/,
+	      use: [
+	        'vue-style-loader',
+	        'css-loader',
+	        {
+	          loader: 'sass-loader',
+	          // Requires sass-loader@^7.0.0
+	          options: {
+	            implementation: require('sass'),
+	            fiber: require('fibers'),
+	            indentedSyntax: true // optional
+	          },
+	          // Requires sass-loader@^8.0.0
+	          options: {
+	            implementation: require('sass'),
+	            sassOptions: {
+	              fiber: require('fibers'),
+	              indentedSyntax: true // optional
+	            },
+	          },
+	        },
+	      ],
+	    },
 			{
 				test: /\.js$/,
 				exclude: /(node_modules|bower_components)/,
@@ -25,7 +50,7 @@ module.exports = {
 				}
 			},
 			{
-         		test: /\.less$/,
+        test: /\.less$/,
 				use: [
 					{
 						loader: 'vue-style-loader' // creates style nodes from JS strings
@@ -53,12 +78,22 @@ module.exports = {
 			{
 				test: /\.svg$/,
 				loader: 'file-loader'
-			}
+			},
+			{
+        test: /\.csv$/,
+        loader: 'csv-loader',
+        options: {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true
+        }
+      }
      	]
 	},
 	plugins: [
 		new VueLoaderPlugin(),
 		new HtmlWebpackPlugin({template: './src/index.html'}),
+		new VuetifyLoaderPlugin(),
 		new webpack.ProvidePlugin({
 			Vue: ['vue/dist/vue.esm.js', 'default'],
 			jQuery: 'jquery',

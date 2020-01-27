@@ -1,28 +1,12 @@
 import Vue from 'vue';
 
-//AXIOS
-import axios from 'axios';
-import VueAxios from 'vue-axios';
-
-
 //VUETIFY
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css'
-
-import '../css/styles.less';
-
-import store from './store';
-
-
-Vue.use(Vuetify);
-Vue.use(VueAxios, axios)
-
+import vuetify from '../plugins/vuetify'
 
 
 //VUE ENTRY POINT
-import App from '../App.vue';
+import App from '../app.vue';
 var vm = new Vue({
-	el: '#app',
-	store,
+	vuetify,
 	render: h => h(App)
-});
+}).$mount('#app');

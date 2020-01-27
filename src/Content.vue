@@ -1,61 +1,70 @@
 <template lang="html">
   <div>
-    <v-flex xs12>
-      <v-date-picker
-        show-week
-        no-title
-        multiple
-        v-model="week"
-        first-day-of-week="1"
-        @input="selectWeek"
-      ></v-date-picker>
-    </v-flex>
+    <v-container grid-list-md>
+      <v-layout row wrap>
+        <v-card>
+          <v-tabs
+            color="primary"
+            slider-color="primary"
+          >
+            <v-tab
+              v-for="day in days">
+              {{ day.name }}
+            </v-tab>
+            <v-tab-item
+              v-for="day in days">
+              <v-data-table
+                :headers="headers"
+                :items="getItemsByAttr('Day', day.val)"
+                :group-by="['Slot']"
+                sort-by="Room"
+                disable-pagination
+                class="elevation-1"
+              >
+              </v-data-table>
+            </v-tab-item>
+          </v-tabs>
+        </v-card>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
 <script>
-  import dataJson from './assets/cal.json'
+  import csvFile from './assets/output.csv';
+
   export default {
 		name: 'Content',
 		data: function () {
 			return {
-        week: [],
+        headers: [
+          { text: 'Raum', value: 'Room'},
+          { text: 'Slot', value: 'Slot' },
+          { text: 'Klasse', value: 'Class' },
+          { text: 'Gruppe', value: 'Subclass' },
+          { text: 'Kurs', value: 'Course' }
+        ],
+        days: [
+          {name: 'Montag', val: 'mo' },
+          {name: 'Dienstag', val: 'di' },
+          {name: 'Mittwoch', val: 'mi' },
+          {name: 'Donnerstag', val: 'do' },
+          {name: 'Freitag', val: 'fr' },
+        ],
 			}
 		},
     created() {
+      console.log(csvFile);
     },
     methods: {
-      selectWeek(val) {
-        const formatted = this.formatDate(val.pop());
-        const sunday = new Date(formatted.setDate(formatted.getDate() - (formatted.getDay())));
-        let arr = [];
-        for (let i = 0; i < 7; i-=-1) {
-          arr.push(this.formatDateString(sunday.setDate(sunday.getDate() + 1)));
-        }
-        console.log(arr);
-        this.week = arr;
+      getAttrs(attr, arr = csvFile) {
+        return [...new Set(arr.map(x => x[attr]))];
       },
-      /*
-      getDataFromMonth() {
-        return dataJson.filter(x => this.formatDate(x.start_date) >= this.formatDate(this.month) && this.formatDate(x.end_date) <= this.formatDate(this.month, true));
+      getItemsByAttr(key, val, arr = csvFile) {
+        return arr.filter(x => x[key] == val);
       },
-      */
-      formatDate(str, add = false) {
-        if (!str) return '';
-        let date;
-        if (str.length == 7) {
-          const arr = str.split('-');
-          date = new Date(`${arr[0]}-${arr[1]}-01`);
-        } else {
-          const arr = str.split('.');
-          date = new Date(`${arr[2]}-${arr[1]}-${arr[0]}`);
-        }
-        if (add) date = new Date(date.setMonth(date.getMonth()+1));
-        return date;
-      },
-      formatDateString(date) {
-        if (!(date instanceof Date)) date = new Date(date);
-        return `${date.getFullYear()}-${(date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1)}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
+      getAllItems() {
+        return csvFile;
       },
     },
   }
