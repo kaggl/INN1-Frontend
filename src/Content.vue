@@ -2,29 +2,32 @@
   <div>
     <v-container grid-list-md>
       <v-layout row wrap>
-        <v-card>
-          <v-tabs
-            color="primary"
-            slider-color="primary"
-          >
-            <v-tab
-              v-for="day in days">
-              {{ day.name }}
-            </v-tab>
-            <v-tab-item
-              v-for="day in days">
-              <v-data-table
-                :headers="headers"
-                :items="getItemsByAttr('Day', day.val)"
-                :group-by="['Slot']"
-                sort-by="Room"
-                disable-pagination
-                class="elevation-1"
-              >
-              </v-data-table>
-            </v-tab-item>
-          </v-tabs>
-        </v-card>
+        <v-flex xs12 justify="center">
+          <v-card>
+            <v-tabs
+              color="primary"
+              slider-color="primary"
+            >
+              <v-tab
+                v-for="day in days">
+                {{ day.name }}
+              </v-tab>
+              <v-tab-item
+                v-for="day in days">
+                <v-data-table
+                  :headers="headers"
+                  :items="getItemsByAttr('Day', day.val)"
+                  group-by="Class"
+                  sort-by="Room"
+                  disable-pagination
+                  hide-default-footer
+                  class="elevation-1"
+                >
+                </v-data-table>
+              </v-tab-item>
+            </v-tabs>
+          </v-card>
+        </v-flex>
       </v-layout>
     </v-container>
   </div>
